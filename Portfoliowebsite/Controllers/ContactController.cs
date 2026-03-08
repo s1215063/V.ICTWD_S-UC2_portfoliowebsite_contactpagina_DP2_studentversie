@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Portfoliowebsite.Services;
+using System.Text.RegularExpressions;
+using System.Web;
 
 namespace Portfoliowebsite.Controllers
 {
@@ -16,17 +18,15 @@ namespace Portfoliowebsite.Controllers
         public async Task<IActionResult> Index(
             [FromForm] string Name,
             [FromForm] string Email,
-            [FromForm] string? Subject,      // Nullable - optioneel
+            [FromForm] string? Subject,
             [FromForm] string Message,
-            [FromForm] string? website)      // Honeypot - nullable
+            [FromForm] string? website)
         {
-            // Honeypot check (niet valideren, alleen checken of ingevuld)
             if (!string.IsNullOrEmpty(website))
             {
                 return BadRequest();
             }
 
-            // Handmatige validatie
             if (string.IsNullOrWhiteSpace(Name) || Name.Length < 2)
             {
                 ModelState.AddModelError("Name", "Naam moet minimaal 2 tekens zijn");
@@ -47,13 +47,19 @@ namespace Portfoliowebsite.Controllers
                 return View();
             }
 
+            // Sanitize alle input
+            var safeName = SanitizeInput(Name);
+            var safeSubject = SanitizeInput(Subject ?? "");
+            var safeMessage = SanitizeInput(Message);
+
             try
             {
-                await _email.SendAsync(Name, Email, Subject ?? "", Message);
+                await _email.SendAsync(safeName, Email, safeSubject, safeMessage);
 
-                TempData["ThanksName"] = Name;
+                // Sanitized data opslaan
+                TempData["ThanksName"] = safeName;
                 TempData["ThanksEmail"] = Email;
-                TempData["ThanksMessage"] = Message;
+                TempData["ThanksMessage"] = safeMessage;
 
                 return RedirectToAction(nameof(Thanks));
             }
@@ -62,6 +68,21 @@ namespace Portfoliowebsite.Controllers
                 ModelState.AddModelError("", "Er ging iets mis. Probeer het later opnieuw.");
                 return View();
             }
+        }
+
+        // Sanitization methode
+        private static string SanitizeInput(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                return string.Empty;
+
+            // Verwijder HTML tags
+            var noHtml = Regex.Replace(input, "<[^>]*>", string.Empty);
+            
+            // HTML encode speciale karakters
+            var encoded = HttpUtility.HtmlEncode(noHtml);
+            
+            return encoded.Trim();
         }
 
         public IActionResult Thanks() => View();

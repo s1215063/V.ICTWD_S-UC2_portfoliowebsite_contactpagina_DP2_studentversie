@@ -20,7 +20,7 @@ function setupValidation() {
 
 
     const showError = (id, message) => {
-        document.getElementById(id).textContent = message;
+        document.getElementById(id).textContent = message;  // door textContent te gebruiken, voorkom je dat er HTML geïnjecteerd kan worden
     };
 
     const clearError = (id) => {
