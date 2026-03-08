@@ -6,30 +6,38 @@
 
 <form id="contactForm" asp-action="Index" method="post" novalidate>
     @Html.AntiForgeryToken()
-    <div class="hp">
+    
+    <div class="hp" aria-hidden="true">
         <label for="website">Laat dit veld leeg</label>
-        <input type="text" id="website" name="website" value="" />
+        <input type="text" id="website" name="website" value="" tabindex="-1" autocomplete="off" />
     </div>
+    
     <div>
-        <input id="Name" name="Name" placeholder="Naam" tabindex="-1" />
-        <div id="nameErr" class="error"></div>
+        <label for="Name">Naam</label>
+        <input id="Name" name="Name" placeholder="Naam" aria-describedby="nameErr" />
+        <div id="nameErr" class="error" aria-live="polite"></div>
     </div>
+    
     <div>
-        <label for="EmailX">E-mail</label>
-        <input id="Email" name="Email" placeholder="naam@domein.nl" />
-        <div id="emailErr" class="error"></div>
+        <label for="Email">E-mail</label>
+        <input id="Email" name="Email" type="email" placeholder="naam@domein.nl" aria-describedby="emailErr" />
+        <div id="emailErr" class="error" aria-live="polite"></div>
     </div>
+    
     <div>
         <label for="Subject">Onderwerp</label>
         <input id="Subject" name="Subject" placeholder="Onderwerp" />
     </div>
+    
     <div>
-        <label for="Message" aria-hidden="true">Bericht</label> 
-        <textarea id="Message" name="Message" rows="5" placeholder="Je bericht"></textarea>
-        <div id="msgErr" class="error"></div>
+        <label for="Message">Bericht</label>
+        <textarea id="Message" name="Message" rows="5" placeholder="Je bericht" aria-describedby="msgErr"></textarea>
+        <div id="msgErr" class="error" aria-live="polite"></div>
     </div>
-    <div id="liveStatus"></div>
-    <div class="send-button" role="button" onclick="document.getElementById('contactForm').submit()">
+    
+    <div id="liveStatus" aria-live="polite"></div>
+    
+    <button type="submit" class="send-button">
         Versturen
-    </div>
+    </button>
 </form>

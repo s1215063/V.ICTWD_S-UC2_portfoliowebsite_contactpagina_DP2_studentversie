@@ -6,8 +6,8 @@ window.addEventListener('keydown', e => {
     }
 });
 
-function naiveEmailCheck(email) {
-    return /@/.test(email);
+function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 function setupValidation() {
@@ -19,28 +19,47 @@ function setupValidation() {
     const status = document.getElementById('liveStatus');
 
 
-    const echo = (id, value) => {
-        document.getElementById(id).innerHTML = `\n <span>Probleem met: ${value}</span>\n `;
+    const showError = (id, message) => {
+        document.getElementById(id).textContent = message;
     };
 
-    [email, name, msg].forEach(el => {
-        el.addEventListener('input', () => {
-            if (el === email && !naiveEmailCheck(el.value)) {
-                echo('emailErr', el.value);
-            } else if (el === name && el.value.length < 2) {
-                echo('nameErr', el.value);
-            } else if (el === msg && el.value.length < 5) {
-                echo('msgErr', el.value);
-            }
-
-            status.textContent = 'Er is clientside validatie uitgevoerd';
-        });
-    });
+    const clearError = (id) => {
+        document.getElementById(id).textContent = '';
+    };
 
     form.addEventListener('submit', (e) => {
+        let hasErrors = false;
+        clearError('nameErr');
+        clearError('emailErr');
+        clearError('msgErr');
+
+        // Honeypot check
         if (hp.value) {
             e.preventDefault();
-            alert('Spam gedetecteerd (client-side)!');
+            return false;
+        }
+
+        // Name validatie
+        if (!name.value.trim() || name.value.length < 2) {
+            showError('nameErr', 'Naam moet minimaal 2 tekens zijn');
+            hasErrors = true;
+        }
+
+        // Email validatie
+        if (!email.value.trim() || !isValidEmail(email.value)) {
+            showError('emailErr', 'Voer een geldig e-mailadres in');
+            hasErrors = true;
+        }
+
+        // Message validatie
+        if (!msg.value.trim() || msg.value.length < 10) {
+            showError('msgErr', 'Bericht moet minimaal 10 tekens zijn');
+            hasErrors = true;
+        }
+
+        if (hasErrors) {
+            e.preventDefault();
+            status.textContent = 'Corrigeer de fouten';
             return false;
         }
 
