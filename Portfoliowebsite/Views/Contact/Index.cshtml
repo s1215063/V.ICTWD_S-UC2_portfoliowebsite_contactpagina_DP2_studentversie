@@ -15,24 +15,29 @@
     
     <div>
         <label for="Name">Naam</label>
-        <input id="Name" name="Name" placeholder="Naam" aria-describedby="nameErr" />
+        <span id="nameHint" class="sr-only">Vul je voor- en achternaam in</span>
+        <input id="Name" name="Name" placeholder="Naam" aria-describedby="nameHint nameErr" />
         <div id="nameErr" class="error" aria-live="polite"></div>
     </div>
     
     <div>
         <label for="Email">E-mail</label>
-        <input id="Email" name="Email" type="email" placeholder="naam@domein.nl" aria-describedby="emailErr" />
+        <span id="emailHint" class="sr-only">Vul een geldig e-mailadres in, bijvoorbeeld naam@domein.nl</span>
+        <input id="Email" name="Email" type="email" placeholder="naam@domein.nl" aria-describedby="emailHint emailErr" />
         <div id="emailErr" class="error" aria-live="polite"></div>
     </div>
     
     <div>
         <label for="Subject">Onderwerp</label>
-        <input id="Subject" name="Subject" placeholder="Onderwerp" />
+        <span id="subjectHint" class="sr-only">Geef een korte samenvatting van je bericht</span>
+        <input id="Subject" name="Subject" placeholder="Onderwerp" aria-describedby="subjectHint subjectErr" />
+        <div id="subjectErr" class="error" aria-live="polite"></div>
     </div>
     
     <div>
         <label for="Message">Bericht</label>
-        <textarea id="Message" name="Message" rows="5" placeholder="Je bericht" aria-describedby="msgErr"></textarea>
+        <span id="msgHint" class="sr-only">Schrijf je bericht, minimaal 10 tekens</span>
+        <textarea id="Message" name="Message" rows="5" placeholder="Je bericht" aria-describedby="msgHint msgErr"></textarea>
         <div id="msgErr" class="error" aria-live="polite"></div>
     </div>
     
