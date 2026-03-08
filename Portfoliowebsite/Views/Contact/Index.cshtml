@@ -4,6 +4,9 @@
 
 <h1>Contact</h1>
 
+@* Voeg dit toe om validatiefouten te zien *@
+<div asp-validation-summary="All" class="text-danger"></div>
+
 <form id="contactForm" asp-action="Index" method="post" novalidate>
     @Html.AntiForgeryToken()
     
