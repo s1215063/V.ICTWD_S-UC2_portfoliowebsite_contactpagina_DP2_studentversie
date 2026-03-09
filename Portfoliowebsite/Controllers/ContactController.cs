@@ -24,11 +24,13 @@ namespace Portfoliowebsite.Controllers
             [FromForm] string Message,
             [FromForm] string? website)
         {
+            // Honeypot veld validatie
             if (!string.IsNullOrEmpty(website))
             {
                 return BadRequest();
             }
 
+            // Data invoer validatie
             if (string.IsNullOrWhiteSpace(Name) || Name.Length < 2)
             {
                 ModelState.AddModelError("Name", "Naam moet minimaal 2 tekens zijn");

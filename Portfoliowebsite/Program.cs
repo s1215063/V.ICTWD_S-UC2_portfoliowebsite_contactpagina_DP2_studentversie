@@ -12,6 +12,7 @@ builder.Services.AddCors(p => p.AddDefaultPolicy(policy =>
 
 builder.Services.AddSingleton<IEmailSender, SmtpEmailSender>();
 
+//ratelimiter configureren
 builder.Services.AddRateLimiter(options =>
 {
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
