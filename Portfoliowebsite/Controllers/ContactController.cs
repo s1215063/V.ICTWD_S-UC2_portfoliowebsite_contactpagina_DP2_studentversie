@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Portfoliowebsite.Services;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -15,6 +16,7 @@ namespace Portfoliowebsite.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("contactForm")]
         public async Task<IActionResult> Index(
             [FromForm] string Name,
             [FromForm] string Email,

@@ -23,7 +23,8 @@ function setupValidation() {
     };
 
    
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
         let hasErrors = false;
         //error clearen
@@ -34,7 +35,6 @@ function setupValidation() {
 
         // Honeypot check
         if (hp.value) {
-            e.preventDefault();
             return false;
         }
 
@@ -57,9 +57,27 @@ function setupValidation() {
         }
 
         if (hasErrors) {
-            e.preventDefault();
             status.textContent = 'Corrigeer de fouten';
             return false;
+        }
+
+        // Submit via fetch with manual redirect to preserve TempData
+        const formData = new FormData(form);
+        const response = await fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            redirect: 'manual'
+        });
+
+        if (response.status === 429) {
+            status.textContent = 'Te veel verzoeken. Probeer het later opnieuw.';
+            showError('msgErr', 'Je hebt te vaak een bericht verstuurd. Wacht even en probeer het opnieuw.');
+            return false;
+        }
+
+        if (response.type === 'opaqueredirect') {
+            window.location.href = '/Contact/Thanks';
+            return;
         }
 
         return true;
